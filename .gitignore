@@ -1,0 +1,16 @@
+# Python bytecode from the build scripts
+__pycache__/
+*.py[cod]
+
+# OS and editor cruft
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*~
+.vscode/
+.idea/
+
+# Local scratch files (leading underscore is the convention used here)
+_*.html

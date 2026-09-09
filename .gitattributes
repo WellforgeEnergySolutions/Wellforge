@@ -1,0 +1,12 @@
+# The generators write LF (io.open(..., newline="\n")). Normalise to LF in the
+# repository and in the working tree, so a rebuild on Windows does not show
+# every generated file as modified purely on line endings.
+* text=auto eol=lf
+
+# Binary assets - never touch these.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.woff binary
+*.woff2 binary

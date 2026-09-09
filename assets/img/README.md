@@ -1,0 +1,139 @@
+# Image assets
+
+Everything here except the logo is **generated**, so any of it can be
+re-proportioned or recoloured by editing one Python file and re-running it:
+
+```bash
+python tools/make_art.py
+```
+
+Nothing is stock artwork. The palette and the drawing helpers sit at the top of
+`tools/make_art.py`.
+
+---
+
+## Logo — unchanged approved artwork
+
+All logo files are generated from the master artwork by
+`tools/make_logo_assets.py`:
+
+| File | Used for |
+| --- | --- |
+| `source/logo-original.png` | the master artwork — **do not delete** |
+| `logo-full-light.png` | the header and footer lockup (light wordmark) |
+| `logo-full.png` | dark wordmark, for light backgrounds |
+| `logo-mark.png` / `logo-mark-light.png` | the WF monogram on its own |
+| `favicon.png` | browser tab icon (180 px, navy tile) |
+| `apple-touch-icon.png` | iOS home-screen icon (512 px) |
+
+The site runs on a dark ground in both the header and the footer, so
+`logo-full-light.png` is the variant in use on every page. `logo-full.png` and
+the two monograms are kept for documents, decks and any light-background use.
+
+The script flattens the 3D master artwork into a clean two-colour mark:
+
+1. **Removes all 3D shading** — bevels, gradients and metallic highlights — and
+   repaints every pixel in one of exactly two flat colours.
+2. **Recolours the arrow** from the original bronze/copper to dark golden
+   `#B8861F`; the W and wordmark become navy `#1B2A4A`.
+3. **Removes the white background** by flood-filling inward from the borders, so
+   highlights inside the shapes survive, then opens the enclosed letter counters
+   (the holes in O, R and so on). Counters are detected by brightness **and**
+   neutrality — a counter is pure white (saturation ~0.02) while a highlight
+   inside the metallic mark is tinted (~0.28), so brightness alone would fill
+   the letters in solid.
+4. **Despeckles** — small colour islands left behind by the original shading are
+   flipped to whichever colour surrounds them.
+5. **Builds the light variant** for dark grounds: the navy becomes white, the
+   gold arrow stays.
+
+### To change the logo
+
+Replace `source/logo-original.png` with the new artwork, then run:
+
+```bash
+python tools/make_logo_assets.py
+```
+
+Every variant regenerates. The two brand colours are the `NAVY` and `GOLD_DARK`
+constants at the top of the script.
+
+Logo sizing lives in `assets/css/style.css` — `.logo__img` is **54 px** tall in
+the header, stepping to 44 px once the header condenses on scroll and 46 px at
+the 1180 px breakpoint; the footer lockup is 58 px.
+
+---
+
+## `art/` — illustrations, diagrams and textures
+
+### Category illustrations
+
+One engineering-drawing sheet per product category, drawn to the same
+conventions: hatched sections, dimension lines, leader callouts, a title block
+and corner ticks. They front the category cards on the home page and the product
+hub, and appear again beside the specification table on each category page.
+
+| File | Subject |
+| --- | --- |
+| `cat-downhole-completion-tools.svg` | a retrievable packer set in cased hole, element stack and slips, perforated interval below |
+| `cat-steel-tubular-products.svg` | pipe ends in section, a coupling detail, the API 5CT grade ladder |
+| `cat-plant-machinery-industrial-components.svg` | a CNC spindle over a chucked workpiece, driven by a gear train |
+| `cat-drilling-fluids-chemicals.svg` | the active mud circulation loop: pits, pump, standpipe, well, shakers, additives |
+| `cat-subsea-offshore-onshore-equipment.svg` | platform, riser, subsea tree, flowline tie-back to a manifold, ROV |
+
+### Section diagrams
+
+| File | Where |
+| --- | --- |
+| `wellbore.svg` | Strategic Sourcing — a cased well in section, conductor through production string |
+| `process-flow.svg` | home + Strategic Sourcing — the five-step sourcing process |
+| `standards-rosette.svg` | behind the navy compliance sections |
+
+### Textures
+
+| File | Where |
+| --- | --- |
+| `grid-tech.svg` | the fine technical grid behind dark sections |
+| `topo.svg` | seismic contour lines behind the heroes |
+| `noise.svg` | film grain over the heroes, so large gradients do not band |
+| `blueprint.svg` | the faint hatch on the light reading sheet used by articles and legal pages |
+
+Several of these animate — the mud loop flows, the process line pulses, the
+platform bobs. The animation is CSS inside the SVG and is switched off under
+`prefers-reduced-motion`.
+
+---
+
+## `blog/*.svg` — article covers
+
+One cover per article, keyed to its category strap, with a motif that matches the
+subject (a stamped certificate, receding tubulars, a pressure gauge, a growth
+chart, a clock, a sourcing network) and the Wellforge wordmark drawn from the
+logo geometry. Display titles are set in the `LINES` map in
+`tools/make_art.py::art_blog_covers`.
+
+To use a photograph instead, drop it in as `blog/<slug>.jpg` and change the
+`post_card()` and `build_post()` image paths in `tools/build_site.py`.
+
+---
+
+## `og-image.png` — social share card
+
+1200 × 630, generated by Pillow in `tools/make_art.py::art_og_image`. It
+composites the real `logo-full-light.png` over a derrick drawn from the same
+geometry as the 3D hero. Open Graph does not render SVG, which is why this one
+is a raster.
+
+---
+
+## Using photography instead
+
+Nothing here is load-bearing. Any generated SVG can be replaced by a photograph
+of the same name and aspect ratio:
+
+- Category illustrations are `860 × 620` and are referenced from
+  `category_cards()` and `build_category()` in `tools/build_site.py`.
+- Article covers are `1200 × 675`.
+- For a photographic homepage hero, drop the image in and give `.hero__bg` a
+  `background-image` in `assets/css/style.css`; the 3D rig sits above it and the
+  existing dark overlay will carry the headline contrast.
