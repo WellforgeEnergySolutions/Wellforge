@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 
+# Node.js dependencies (installed on the host via package.json)
+node_modules/
+npm-debug.log*
+
 # OS and editor cruft
 Thumbs.db
 ehthumbs.db
